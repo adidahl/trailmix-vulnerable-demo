@@ -1,0 +1,19 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show registry settings
+        run: |
+          echo "registry token: ${{ secrets.NPM_PUBLISH_TOKEN }}"
+          echo "deploy key: ${{ secrets.DEPLOY_SSH_KEY }}"
+      - run: docker build -t trailmix-api:${{ github.ref_name }} .

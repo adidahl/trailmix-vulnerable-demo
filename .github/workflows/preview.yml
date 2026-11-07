@@ -1,0 +1,20 @@
+name: preview-build
+
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: npm install && npm run build
+        working-directory: web
+        env:
+          PREVIEW_TOKEN: ${{ secrets.PREVIEW_TOKEN }}
